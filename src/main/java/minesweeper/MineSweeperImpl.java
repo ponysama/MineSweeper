@@ -3,10 +3,14 @@ package minesweeper;
 public class MineSweeperImpl implements MineSweeper{
 	
 	private MineHole[][] myMineField;
+	
+	private int totalRows;
+	private int totalColumns;
 
 	public void setMineField(int N, int M, String mineField) throws IllegalFieldSizeException {
 		// TODO Auto-generated method stub
 		if(N<=0 || M<=0) throw new IllegalFieldSizeException("MineField size is illegal");
+			
 		this.myMineField = new MineHole[N][M];
 		int currentCharPointer = 0;
 		for(int row =0;row<N;row++){
@@ -16,11 +20,23 @@ public class MineSweeperImpl implements MineSweeper{
 			}
 			currentCharPointer ++;
 		}
+		this.totalRows = N;
+		this.totalColumns = M;
 	}
 
-	public String getHintField() throws IllegalStateException {
+	public String getHintField() {
 		// TODO Auto-generated method stub
-		return null;
+		StringBuilder hint = new StringBuilder();
+		MineHole currentHole;
+		for(int row =0;row<this.totalRows;row++){
+			for(int col = 0; col<this.totalColumns; col++){
+				currentHole = this.myMineField[row][col];
+				currentHole.checkNeibors();
+				hint.append(currentHole.hasMine? "*":Integer.toString(currentHole.getNeiborMineCount()));
+			}
+			if(!(row == this.totalRows-1))	hint.append('\n');
+		}
+		return hint.toString();
 	}
 	
 	private boolean inFirstColumn(int col){
@@ -57,7 +73,7 @@ public class MineSweeperImpl implements MineSweeper{
 		}
 		
 		void checkNeibors(){
-			if(this.inLastRow){
+			/*if(this.inLastRow){
 				if(!this.inLastColumn){
 					this.exchangeInfo(myMineField[this.row][this.row+1]);
 				}
@@ -80,7 +96,11 @@ public class MineSweeperImpl implements MineSweeper{
 				this.exchangeInfo(myMineField[this.row+1][this.column]);
 				this.exchangeInfo(myMineField[this.row+1][this.column+1]);
 				this.exchangeInfo(myMineField[this.row-1][this.column-1]);
-			}
+			}*/
+			if(!this.inLastColumn) this.exchangeInfo(myMineField[this.row][this.column+1]);;
+			if(!this.inLastRow) this.exchangeInfo(myMineField[this.row+1][this.column]);
+			if(!(this.inLastColumn || this.inLastRow)) this.exchangeInfo(myMineField[this.row+1][this.column+1]);
+			if(!(this.inFirstColumn || this.inLastRow)) this.exchangeInfo(myMineField[this.row+1][this.column-1]);
 		}
 		
 		void exchangeInfo(MineHole neibor){

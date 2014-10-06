@@ -1,6 +1,7 @@
 package minesweeper;
 
 import minesweeper.MineSweeperImpl.IllegalFieldSizeException;
+
  
 /**
 * A mine-field of N x M squares is represented by N lines of exactly M characters each.
@@ -29,6 +30,7 @@ public interface MineSweeper {
      * @param mineField
      *            string containing the mines (see interface javadoc for representation)
      * @throws IllegalFieldSizeException 
+     *  
      */
     void setMineField(int N, int M, String mineField) throws IllegalFieldSizeException;
  
